@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message_status'] = 'メッセージが投稿されました！';
 
             // 投稿成功後、フォームの入力をクリアするために、ページをリロードする (リダイレクト)
-            header('Location: post.php');
+            header('Location: manage.php');
             exit(); // リダイレクト後は必ずexit()でスクリプトの実行を終了する
         } catch (PDOException $e) {
             // データベースへの挿入に失敗した場合
@@ -84,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">送信</button>
             <button type="reset">キャンセル</button>
         </form>
-        <p><a href="index.php">メッセージ一覧に戻る</a></p>
+        <p><a href="manage.php">メッセージ一覧に戻る</a></p>
+        <p><a href="index.php">TOPページへ</a></p>
     </div>
     <!-- 寄せ書き登録画面エリア end -->
 </body>
