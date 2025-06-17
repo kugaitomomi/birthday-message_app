@@ -45,9 +45,9 @@ try {
                     <p><strong>投稿日時: </strong><?php echo htmlspecialchars($message['created_at'], ENT_QUOTES, 'UTF-8') ?></p>
                     <p>
                         <a href="edit.php?id=<?php echo htmlspecialchars($message['id'], ENT_QUOTES, 'UTF-8'); ?>">編集</a>
-                    <form action="delete.php" method="post" style="display:inline;">
+                    <form action="delete.php" method="post">
                         <input type="hidden" name="id" value="<?php echo htmlspecialchars($message['id'], ENT_QUOTES, 'UTF-8'); ?>">
-                        <button type="submit" onclick="return confirm('本当にこのメッセージを削除しますか？');">削除</button>
+                        <button type="submit" onclick="return confirm('このメッセージを削除しますか？')">削除</button>
                     </form>
                     </p>
                 </div>
