@@ -1,25 +1,33 @@
 # ベースイメージとしてPHPとApacheが同梱されたイメージを使用
-FROM php:8.2-apache
+FROM php:8.2-apache # あなたのPHPバージョンに合わせてください
 
-# Composerをインストール
-# 最新のComposerバイナリを取得し、/usr/local/bin/composer に配置
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# 必要なPHP拡張機能をインストール
+# PostgreSQLを使うので pdo_pgsql をインストール
+RUN docker-php-ext-install pdo_pgsql \
+    && docker-php-ext-enable pdo_pgsql \
+    && a2enmod rewrite # Apacheのmod_rewriteを有効化
 
 # アプリケーションのコードをコンテナ内の /var/www/html ディレクトリにコピー
 COPY . /var/www/html/
 
-# Apacheのmod_rewriteを有効化（必要であれば）
-RUN a2enmod rewrite
+# コンテナの作業ディレクトリをアプリケーションのルートに設定
+WORKDIR /var/www/html/
 
-# 必要なPHP拡張機能をインストール（例: mysqli, pdo_mysql, gd など）
-# YOUR_EXTENSION_NAME を必要な拡張機能の名前に置き換えてください
-RUN docker-php-ext-install mysqli pdo_mysql # もしMySQLを使うなら
-# RUN docker-php-ext-install pdo_pgsql       # もしPostgreSQLを使うなら
-# RUN docker-php-ext-install gd              # 画像処理が必要なら
+# Composerは使わないので、Composer関連の行は削除またはコメントアウト
+# COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# RUN composer install --no-dev --optimize-autoloader
 
-# Composerを使用する場合（オプション）
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-RUN composer install --no-dev --optimize-autoloader # 依存関係をインストール
+# --- Tailwind CSS をビルドするためのNode.js関連のコマンド ---
+# package.json をコピー
+COPY package.json ./
+
+# Node.jsの依存関係をインストール (npm install)
+RUN npm install
+
+# Tailwind CSS をビルド (npm run build)
+# このコマンドが package.json の "scripts": { "build": "..." } と一致することを確認してください
+RUN npm run build
+# --- ここまで ---
 
 # コンテナがリッスンするポートを公開 (Apacheは通常80)
 EXPOSE 80
