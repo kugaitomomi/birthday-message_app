@@ -1,15 +1,22 @@
 # ベースイメージとしてPHPとApacheが同梱されたイメージを使用
-FROM php:8.2-apache 
-
-# あなたのPHPバージョンに合わせてください
+FROM php:8.2-apache
 
 # 必要なPHP拡張機能をインストール
-# PostgreSQLを使うので pdo_pgsql をインストール
 # libpq-dev をインストールするために apt-get update と apt-get install を追加
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo_pgsql \
-    && docker-php-ext-enable pdo_pgsql \
-    && a2enmod rewrite # Apacheのmod_rewriteを有効化
+    && docker-php-enable pdo_pgsql \
+    && a2enmod rewrite
+
+# --- ここに Node.js (npm) のインストールを追加します ---
+# Node.js公式のDebianリポジトリを追加
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs build-essential
+
+# npmキャッシュのクリーンアップとパーミッション調整（推奨）
+RUN npm cache clean --force && npm config set unsafe-perm true
+# --- Node.js (npm) のインストール終わり ---
+
 
 # アプリケーションのコードをコンテナ内の /var/www/html ディレクトリにコピー
 COPY . /var/www/html/
