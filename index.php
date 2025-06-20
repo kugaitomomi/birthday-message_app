@@ -41,7 +41,7 @@ try {
         $sql .= " WHERE m.recipient_id = :filter_recipient_id";
     }
 
-    $sql .= "  ORDER BY m.created_at DESC";
+    $sql .= " ORDER BY m.created_at DESC";
 
     if (!empty($selected_recipient_id)) {
         //プレースホルダーがある場合
@@ -78,6 +78,9 @@ try {
     <!-- 寄せ書き表示画面エリア start -->
     <div class="max-w-lg mx-auto px-3">
         <h1 class="text-2xl font-bold underline text-blue-600 mb-10 mt-10 text-center">🥳<?php echo htmlspecialchars($display_h1_name, ENT_QUOTES,); ?>くん誕生日、おめでとう！！🥳</h1>
+        <?php if (isset($message_status) && !empty($message_status)): ?>
+            <p class="text-red-500 text-center mb-4"><?php echo htmlspecialchars($message_status, ENT_QUOTES, 'UTF-8'); ?></p>
+        <?php endif; ?>
         <div><img src="./img/main.jpg" alt=""></div>
         <?php if (!empty($messages)): ?>
             <?php foreach ($messages as $message): ?>
