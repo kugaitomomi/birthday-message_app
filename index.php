@@ -109,6 +109,7 @@ try {
                 <button type="submit" class="bg-cyan-600 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded">絞り込む</button>
             </div>
         </form>
+        <div class="bg-cyan-600 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded mr-20"><a href="manage.php">一覧ページに戻る</a></div>
     </div>
     <footer class="text-center mt-20 bg-cyan-700 text-white pt-2 pb-2">
         © 2025 寄せ書きアプリ
