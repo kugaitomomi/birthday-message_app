@@ -1,16 +1,15 @@
 # ベースイメージとしてPHPとApacheが同梱されたイメージを使用
 FROM php:8.2-apache 
 
-# あなたのPHPバージョンに合わせてください <-- このコメントをFROM行から分離
+# あなたのPHPバージョンに合わせてください
 
 # 必要なPHP拡張機能をインストール
 # PostgreSQLを使うので pdo_pgsql をインストール
-
-RUN docker-php-ext-install pdo_pgsql \
+# libpq-dev をインストールするために apt-get update と apt-get install を追加
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-enable pdo_pgsql \
-    && a2enmod rewrite 
-    
-    # Apacheのmod_rewriteを有効化
+    && a2enmod rewrite # Apacheのmod_rewriteを有効化
 
 # アプリケーションのコードをコンテナ内の /var/www/html ディレクトリにコピー
 COPY . /var/www/html/
