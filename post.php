@@ -4,7 +4,10 @@ require 'config.php';
 require 'get_recipients_data.php';
 
 // メッセージの投稿結果をユーザーに伝えるための変数
-session_start(); // PHPスクリプトの開始時に必ずセッションを開始。ヘッダー送信前である必要がある。
+//session_start(); // PHPスクリプトの開始時に必ずセッションを開始。ヘッダー送信前である必要がある。
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 $message_status = ''; // メッセージの投稿結果をユーザーに伝えるための変数
 
