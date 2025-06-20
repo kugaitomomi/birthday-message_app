@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit(); // ここで処理を終了
     } else {
         try {
-            $stmt = $pdo->prepare("INSERT INTO messages (sender_name, message_text, recipient_id) VALUE (:sender_val, :message_val, :recipient_id_val)");
+            $stmt = $pdo->prepare("INSERT INTO messages (sender_name, message_text, recipient_id) VALUES (:sender_val, :message_val, :recipient_id_val)");
 
             // プレースホルダに実際の値をバインド（割り当てる）
             $stmt->bindParam(':sender_val', $sender_val, PDO::PARAM_STR); //PDO::PARAM_STRは文字列として扱うことを示す
