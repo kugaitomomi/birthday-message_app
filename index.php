@@ -74,38 +74,45 @@ try {
     <link href="./dist/output.css" rel="stylesheet">
 </head>
 
-<body>
+<body id="top" class="bg-cream-bg">
     <!-- 寄せ書き表示画面エリア start -->
-    <div>
+    <div class="max-w-lg mx-auto px-3">
+        <h1 class="text-2xl font-bold underline text-blue-600 mb-10 mt-10 text-center">🥳<?php echo htmlspecialchars($display_h1_name, ENT_QUOTES,); ?>くん誕生日、おめでとう！！🥳</h1>
+        <div><img src="./img/main.jpg" alt=""></div>
+        <?php if (!empty($messages)): ?>
+            <?php foreach ($messages as $message): ?>
+                <div class="border border-gray-300 p-5 bg-white mt-10">
+                    <p><strong>名前: </strong><?php echo htmlspecialchars($message['sender_name'], ENT_QUOTES, 'UTF-8') ?></p>
+                    <p><strong>メッセージ: </strong><?php echo htmlspecialchars($message['message_text'], ENT_QUOTES, 'UTF-8') ?></p>
+                    <p><strong>宛先：</strong><?php echo htmlspecialchars($message['recipient_name'], ENT_QUOTES, 'UTF-8')  ?></p>
+                    <p><strong>投稿日時: </strong><?php echo htmlspecialchars($message['created_at'], ENT_QUOTES, 'UTF-8') ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>まだメッセージはありません。最初のメッセージを投稿してみましょう！</p>
+        <?php endif ?>
+    </div>
+    <!-- 寄せ書き表示画面エリア end -->
+    <div class="max-w-lg mx-auto px-3 mt-10">
         <form action="index.php" method="GET">
-            <h1 class="text-3xl font-bold underline text-blue-600">🥳🥳🥳<?php echo htmlspecialchars($display_h1_name, ENT_QUOTES,); ?>くん誕生日、おめでとう！！🥳🥳🥳</h1>
-            <div class="filter-form">
-
+            <div>
                 <label for="filterRecipient" class="">宛先で絞り込む</label>
-                <select name="filter_recipient_id" id="filterRecipient">
+                <select name="filter_recipient_id" id="filterRecipient" class="border-2 border-amber-900 border-solid p-2 w-full">
                     <option value="">全ての宛先</option>
                     <?php foreach ($all_recipients as $recipient): ?>
                         <option value="<?php echo htmlspecialchars($recipient['id'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($recipient['name'], ENT_QUOTES, 'UTF-8'); ?></option>
 
                     <?php endforeach; ?>
                 </select>
-                <button type="submit">絞り込む</button>
+            </div>
+            <div class="flex justify-center mt-8 mb-10">
+                <button type="submit" class="bg-cyan-600 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded">絞り込む</button>
+            </div>
         </form>
     </div>
-    <?php if (!empty($messages)): ?>
-        <?php foreach ($messages as $message): ?>
-            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                <p><strong>名前: </strong><?php echo htmlspecialchars($message['sender_name'], ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>メッセージ: </strong><?php echo htmlspecialchars($message['message_text'], ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>宛先：</strong><?php echo htmlspecialchars($message['recipient_name'], ENT_QUOTES, 'UTF-8')  ?></p>
-                <p><strong>投稿日時: </strong><?php echo htmlspecialchars($message['created_at'], ENT_QUOTES, 'UTF-8') ?></p>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>まだメッセージはありません。最初のメッセージを投稿してみましょう！</p>
-    <?php endif ?>
-    </div>
-    <!-- 寄せ書き表示画面エリア end -->
+    <footer class="text-center mt-20 bg-cyan-700 text-white pt-2 pb-2">
+        © 2025 寄せ書きアプリ
+    </footer>
 </body>
 
 </html>

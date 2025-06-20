@@ -6,7 +6,11 @@ module.exports = {
     // 他にもTailwindクラスを使うファイルがあればここに追加
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'cream-bg': '#fff7ef',
+      },
+    },
   },
   plugins: [],
 }

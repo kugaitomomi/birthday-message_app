@@ -2,7 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body#top {
     font-family: "M PLUS Rounded 1c", sans-serif;
+    background-image: url("../img/bg_bottom.png");
+    background-position: bottom left;
+    background-repeat: repeat-x;
   }
+body#top::before {
+    content: "";
+    display: block;
+    background-image: url("../img/bg_top.png");
+    background-position: top left;
+    background-repeat: repeat-x;
+}
+
   

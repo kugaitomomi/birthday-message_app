@@ -77,9 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <header class="w-full">
         <ul class="flex justify-around mt-5 mb-5 max-w-lg mx-auto border-l-2 border-sky-800">
-            <li class="flex-1"><a href="index.php" class="block px-3 py-2 text-center border-r-2 border-sky-800 hover:bg-blue-800 hover:text-white">寄せ書きTOP</a></li>
-            <li class="flex-1"><a href="post.php" class="block px-3 py-2 text-center border-r-2 border-sky-800 hover:bg-blue-800 hover:text-white">投稿フォーム</a></li>
-            <li class="flex-1"><a href="manage.php" class="block px-3 py-2 text-center border-r-2  border-sky-800 hover:bg-blue-800 hover:text-white">投稿一覧</a></li>
+            <li class="flex-1"><a href="index.php" class="block px-3 py-2 text-center border-r-2 border-sky-800 hover:bg-cyan-700 hover:text-white">寄せ書きTOP</a></li>
+            <li class="flex-1"><a href="post.php" class="block px-3 py-2 text-center border-r-2 border-sky-800 hover:bg-cyan-700 hover:text-white">投稿フォーム</a></li>
+            <li class="flex-1"><a href="manage.php" class="block px-3 py-2 text-center border-r-2  border-sky-800 hover:bg-cyan-700 hover:text-white">投稿一覧</a></li>
         </ul>
     </header>
     <section>
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </label>
                 </div>
                 <div class="flex justify-center max-w-sm mx-auto space-x-4 mt-10 mb-20">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-20">送信</button>
+                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded mr-20">送信</button>
                     <button type="reset" class="bg-transparent hover:bg-gray-800 text-gray-800 font-semibold hover:text-white py-2 px-4 border border-gray-800 hover:border-transparent rounded">キャンセル</button>
                 </div>
             </form>
@@ -129,7 +129,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- 寄せ書き登録画面エリア end -->
 
     </section>
-
+    <footer class="text-center mt-20 bg-cyan-700 text-white pt-2 pb-2">
+        © 2025 寄せ書きアプリ
+    </footer>
 </body>
 
 </html>
