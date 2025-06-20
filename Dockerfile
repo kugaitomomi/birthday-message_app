@@ -1,6 +1,10 @@
 # ベースイメージとしてPHPとApacheが同梱されたイメージを使用
 FROM php:8.2-apache
 
+# Composerをインストール
+# 最新のComposerバイナリを取得し、/usr/local/bin/composer に配置
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
 # アプリケーションのコードをコンテナ内の /var/www/html ディレクトリにコピー
 COPY . /var/www/html/
 
