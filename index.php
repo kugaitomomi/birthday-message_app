@@ -2,17 +2,57 @@
 session_start(); // セッション開始
 
 require 'config.php'; // DB接続
+require 'get_recipients_data.php';
 
 // ===========================================
 // メッセージ表示処理 (GETリクエスト時に実行)
 // ===========================================
 $messages = []; // 取得したメッセージを格納する配列を初期化
+$selected_recipient_id = $_GET['filter_recipient_id'] ?? ''; // 選択された宛先IDを取得
+$display_h1_name = '理一';
+
+if (!empty($selected_recipient_id)) {
+    foreach ($all_recipients as $recipient) {
+        if ($recipient['id'] == $selected_recipient_id) {
+            $display_h1_name = $recipient['name'];
+            break;
+        }
+    }
+}
 
 try {
     // 全メッセージを取得するSQLクエリ
     // 新しい投稿が上に来るように、idを降順に並べ替える (ORDER BY id DESC)
     // テーブル名が 'messages' であることを確認してください
-    $stmt = $pdo->query("SELECT id, sender_name, message_text, created_at FROM messages ORDER BY created_at DESC"); //結果セット（問い合わせた行とカラムの集合）を取得しているだけ。値の取得ではない。
+    $sql = "
+    SELECT
+        m.id,
+        m.sender_name,
+        m.message_text,
+        m.created_at,
+        r.name AS recipient_name -- recipientsテーブルのnameカラムをrecipient_nameとして取得
+    FROM
+        messages AS m
+    JOIN
+        recipients AS r ON m.recipient_id = r.id -- recipientsテーブルを外部参照する
+   ";
+    // 宛先が選択されている場合、WHERE句を追加
+    if (!empty($selected_recipient_id)) {
+        $sql .= " WHERE m.recipient_id = :filter_recipient_id";
+    }
+
+    $sql .= "  ORDER BY m.created_at DESC";
+
+    if (!empty($selected_recipient_id)) {
+        //プレースホルダーがある場合
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':filter_recipient_id', $selected_recipient_id, PDO::PARAM_INT);
+        $stmt->execute();
+    } else {
+        //プレースホルダーがない場合(全件表示)
+        $stmt = $pdo->query($sql);
+    }
+
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC); // 連想配列として結果を取得
     //var_dump($messages); //配列を直接echoすると "Array" と表示されるだけで内容が見えないので注意。デバッグにはvar_dump()が便利です。
 } catch (PDOException $e) {
@@ -28,23 +68,42 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>寄せ書きアプリ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+    <link href="./dist/output.css" rel="stylesheet">
 </head>
 
 <body>
     <!-- 寄せ書き表示画面エリア start -->
     <div>
-        <h1>🥳🥳🥳理一くん誕生日、おめでとう！！🥳🥳🥳</h1>
-        <?php if (!empty($messages)): ?>
-            <?php foreach ($messages as $message): ?>
-                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                    <p><strong>名前: </strong><?php echo htmlspecialchars($message['sender_name'], ENT_QUOTES, 'UTF-8') ?></p>
-                    <p><strong>メッセージ: </strong><?php echo htmlspecialchars($message['message_text'], ENT_QUOTES, 'UTF-8') ?></p>
-                    <p><strong>投稿日時: </strong><?php echo htmlspecialchars($message['created_at'], ENT_QUOTES, 'UTF-8') ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>まだメッセージはありません。最初のメッセージを投稿してみましょう！</p>
-        <?php endif ?>
+        <form action="index.php" method="GET">
+            <h1 class="text-3xl font-bold underline text-blue-600">🥳🥳🥳<?php echo htmlspecialchars($display_h1_name, ENT_QUOTES,); ?>くん誕生日、おめでとう！！🥳🥳🥳</h1>
+            <div class="filter-form">
+
+                <label for="filterRecipient" class="">宛先で絞り込む</label>
+                <select name="filter_recipient_id" id="filterRecipient">
+                    <option value="">全ての宛先</option>
+                    <?php foreach ($all_recipients as $recipient): ?>
+                        <option value="<?php echo htmlspecialchars($recipient['id'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($recipient['name'], ENT_QUOTES, 'UTF-8'); ?></option>
+
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit">絞り込む</button>
+        </form>
+    </div>
+    <?php if (!empty($messages)): ?>
+        <?php foreach ($messages as $message): ?>
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <p><strong>名前: </strong><?php echo htmlspecialchars($message['sender_name'], ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>メッセージ: </strong><?php echo htmlspecialchars($message['message_text'], ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>宛先：</strong><?php echo htmlspecialchars($message['recipient_name'], ENT_QUOTES, 'UTF-8')  ?></p>
+                <p><strong>投稿日時: </strong><?php echo htmlspecialchars($message['created_at'], ENT_QUOTES, 'UTF-8') ?></p>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>まだメッセージはありません。最初のメッセージを投稿してみましょう！</p>
+    <?php endif ?>
     </div>
     <!-- 寄せ書き表示画面エリア end -->
 </body>
