@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y libpq-dev \
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs build-essential
 
-# npmキャッシュのクリーンアップとパーミッション調整（推奨）
-RUN npm cache clean --force && npm config set unsafe-perm true
+# npmキャッシュのクリーンアップとパーミッション調整（推奨） <-- この行を削除します
+# RUN npm cache clean --force && npm config set unsafe-perm true 
 # --- Node.js (npm) のインストール終わり ---
 
 
