@@ -30,7 +30,7 @@ try {
         m.sender_name,
         m.message_text,
         m.created_at,
-        r.name AS recipient_name -- recipientsテーブルのnameカラムをrecipient_nameとして取得
+        r.name AS recipient_name
     FROM
         messages AS m
     JOIN
@@ -43,17 +43,14 @@ try {
 
     $sql .= " ORDER BY m.created_at DESC";
 
-    if (!empty($selected_recipient_id)) {
-        //プレースホルダーがある場合
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':filter_recipient_id', $selected_recipient_id, PDO::PARAM_INT);
-        $stmt->execute();
-    } else {
-        //プレースホルダーがない場合(全件表示)
-        $stmt = $pdo->query($sql);
-    }
+    $stmt = $pdo->prepare($sql);
 
-    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC); // 連想配列として結果を取得
+    if (!empty($selected_recipient_id)) {
+        $stmt->bindParam(':filter_recipient_id', $selected_recipient_id, PDO::PARAM_INT);
+    }
+    $stmt->execute(); // 常に execute() を呼ぶ
+
+    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     //var_dump($messages); //配列を直接echoすると "Array" と表示されるだけで内容が見えないので注意。デバッグにはvar_dump()が便利です。
 } catch (PDOException $e) {
     $message_status = 'メッセージの読み込みに失敗しました: ' . $e->getMessage();
@@ -77,7 +74,7 @@ try {
 <body id="top" class="bg-cream-bg">
     <!-- 寄せ書き表示画面エリア start -->
     <div class="max-w-lg mx-auto px-3">
-        <h1 class="text-2xl font-bold underline text-blue-600 mb-10 mt-10 text-center">🥳<?php echo htmlspecialchars($display_h1_name, ENT_QUOTES,); ?>くん誕生日、おめでとう！！🥳</h1>
+        <h1 class="text-2xl font-bold underline text-blue-600 mb-10 mt-10 text-center">🥳<?php echo htmlspecialchars($display_h1_name, ENT_QUOTES, 'UTF-8'); ?>くん誕生日、おめでとう！！🥳</h1>
         <?php if (isset($message_status) && !empty($message_status)): ?>
             <p class="text-red-500 text-center mb-4"><?php echo htmlspecialchars($message_status, ENT_QUOTES, 'UTF-8'); ?></p>
         <?php endif; ?>
