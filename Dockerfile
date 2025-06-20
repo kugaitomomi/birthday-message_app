@@ -5,7 +5,7 @@ FROM php:8.2-apache
 # libpq-dev をインストールするために apt-get update と apt-get install を追加
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo_pgsql \
-    && docker-php-enable pdo_pgsql \
+    && docker-php-ext-enable pdo_pgsql \
     && a2enmod rewrite
 
 # --- ここに Node.js (npm) のインストールを追加します ---
