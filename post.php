@@ -1,5 +1,8 @@
 <?php
 // config.php を読み込み、データベース接続を確立
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require 'config.php';
 require 'get_recipients_data.php';
 
